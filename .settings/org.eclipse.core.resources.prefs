@@ -1,0 +1,16 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/cache/EhCacheProvider.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/ConfigSQLUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/DateUtils.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/EncodingDetect.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/JsonUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/KeyUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/SQLPoolInitializor.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/SecretUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/SerializeUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/UUIDGenerator.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/spring/ContextLoadFinishHandle.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/spring/SpringContextUtil.java=UTF-8
+encoding//src/main/webapp/style/default/style.css=UTF-8
+encoding//src/test/java=UTF-8

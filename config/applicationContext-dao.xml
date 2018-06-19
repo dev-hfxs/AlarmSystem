@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- 属性文件读入 -->   
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:**/dbConfig.properties</value>
+                <value>classpath*:config/**/dbConfig.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+	<!-- 数据源定义,使用Proxool 连接池-->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+		<property name="targetDataSource">
+			<bean class="org.logicalcobwebs.proxool.ProxoolDataSource">
+				<property name="driver" value="${db.driver}" />
+				<property name="driverUrl" value="${db.driverUrl}" />
+				<property name="user" value="${db.user}" />
+				<property name="password" value="${db.password}" />
+			    <!--最少保持的空闲连接数-->
+			    <property name="prototypeCount" value="${db.prototypeCount}" />
+			    <!--允许最大连接数,超过了这个连接，再有请求时，就排在队列中--> 
+			    <property name="maximumConnectionCount" value="${db.maximumConnectionCount}" />  
+			    <!--最小连接数-->
+			    <property name="minimumConnectionCount"  value="${db.minimumConnectionCount}" />
+			    <!--排队连接数-->
+			    <property name="simultaneousBuildThrottle"  value="${db.simultaneousBuildThrottle}" />
+	        </bean>
+	    </property>
+	</bean>
+	
+	<!--JDBC模板配置  -->
+	<bean id="SpringJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" >
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" >
+		<description>处理Blob和Clob字段</description>
+	</bean>
+</beans>
