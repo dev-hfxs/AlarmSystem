@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-box-getBoxs" name="获取机箱信息列表">
+		<content>
+		 select id, box_number, nfc_number, longitude, latitude, pos_desc, create_date from t_machine_box where 1=1 [ and instr(box_number,':boxNumber') > 0 ]  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-box-getBoxById" name="根据id获取机箱信息">
+		<content>
+		 select id, box_number, nfc_number, longitude, latitude, pos_desc, create_date from t_machine_box where id= ':boxId'   
+		</content>
+		<description></description>
+	</sql>
+	
+    <sql id="alarm-box-addBox" name="添加机箱信息">
+		<content>
+		 insert into t_machine_box(id, box_number, nfc_number, longitude, latitude, pos_desc, create_date)  
+		 values(':boxId', ':boxNumber', ':nfcNumber', :longitude, :latitude, ':posDesc', ':createDate' ) 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-box-updateBox" name="修改机箱信息">
+		<content>
+		 update t_machine_box set box_number=':boxNumber', nfc_number=':nfcNumber', longitude=:longitude, latitude=:latitude, pos_desc=':posDesc' where id = ':boxId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-box-deleteBoxById" name="删除机箱信息">
+		<content>
+		 delete from t_machine_box where id = ':boxId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-box-checkBoxNfcNumber" name="检查机箱NFC序列号是否存在">
+		<content>
+		 select count(*) as countNum from t_machine_box where id != ':boxId' and nfc_number = ':nfcNumber'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-box-checkBoxNumber" name="检查机箱编号是否存在">
+		<content>
+		 select count(*) as countNum from t_machine_box where id != ':boxId' and box_number = ':boxNumber'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-box-checkBoxHasProcessor" name="检查机箱是否包含处理器">
+		<content>
+		 select count(*) as countNum from t_processor where machine_box_id = ':boxId'  
+		</content>
+		<description></description>
+	</sql>
+	
+</sqls>

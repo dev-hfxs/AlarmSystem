@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>	
+	<sql id="alarm-user-addUser" name="添加用户">
+		<content>
+		INSERT INTO t_user(id,user_name,full_name,org_id,contact_number,status,password,init_password,sex,birthday,creator,create_date) 
+		VALUES (':userId',':userName',':fullName',':orgId',':contactNumber','N',':password','Y',':sex',':birthday',':creator',':createDate') 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-updateUser" name="修改用户">
+		<content>
+		UPDATE t_user set user_name=':userName', full_name=':fullName', org_id=':orgId', contact_number=':contactNumber',sex=':sex', birthday=':birthday' WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-getUserById" name="根据ID获取用户">
+		<content>
+		SELECT id,user_name,full_name,org_id,contact_number,status,password,sex,birthday,creator,create_date FROM t_user WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-getUserByUserName" name="登录根据用户名获取用户">
+		<content>
+		SELECT id,user_name,full_name,org_id,contact_number,status,password,sex,birthday,creator,create_date FROM t_user WHERE user_name = ':userName' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-getUserMenusByUserId" name="根据用户ID获取用户的菜单">
+		<content>
+		SELECT id, menu_name,menu_code,menu_url,icon_url,parent_id 
+		FROM t_menu m 
+		WHERE  EXISTS (SELECT res_id FROM t_role_res r WHERE m.id = r.res_id AND res_type = 'M' AND role_id in (select role_id from t_user_role where user_id = ':userId') )
+		ORDER BY m.order_num ASC
+		 <!-- -->  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-getDefinedUsers" name="获取维护的用户列表">
+		<content>
+		SELECT u.id, u.user_name, u.full_name, u.org_id, o.org_name, u.contact_number, u.status 
+		FROM t_user u 
+		LEFT JOIN t_org o ON u.org_id = o.id 
+		WHERE u.id != 'u8952c8666964e07a9a285b10d706a61' [ AND instr(u.user_name,':userName') > 0 ] ORDER BY u.org_id, u.create_date DESC
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-checkUserExistsByUserName" name="检查用户名是否存在">
+		<content>
+		SELECT COUNT(*) as countNum FROM t_user WHERE id != ':userId' AND user_name = ':userName'
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-checkUserExistsByFullName" name="检查姓名是否存在">
+		<content>
+		SELECT COUNT(*) as countNum FROM t_user WHERE id != ':userId' AND full_name = ':fullName'
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-updatePwdByUsrId" name="修改用户密码">
+		<content>
+		UPDATE t_user set password = ':newPassword', init_password = ':initPassword' WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-deleteUserByUsrId" name="删除用户">
+		<content>
+		UPDATE t_user set status = 'D' WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-user-recoverUserByUsrId" name="恢复用户">
+		<content>
+		UPDATE t_user set status = 'R' WHERE id = ':userId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+</sqls>

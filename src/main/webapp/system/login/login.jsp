@@ -60,7 +60,6 @@ body{
 			    url:'<%=path%>/auth/login.do',
 			    data:{
 			    	'userName':$("#userName").val(),
-			    	'fullName':$("#fullName").val(),
 			    	'password':$("#password").val()	    	
 			    },
 			    type:'post',

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-org-addOrg" name="添加组织">
+		<content>
+		INSERT INTO t_org (id, parent_id, org_name, org_code, address, telephone, contacts, email, status,order_num, creator, create_date) 
+		VALUES (':orgId', ':parentId', ':orgName', ':orgCode', ':address', ':telephone', ':contacts', ':email', 'N', :orderNum, ':creator', ':createDate') 
+		</content>
+		<description>
+		</description>
+	</sql>
+
+	<sql id="alarm-org-updateOrg" name="修改组织">
+		<content>
+		update t_org set parent_id = ':parentId', org_name=':orgName', org_code=':orgCode', address=':address', telephone=':telephone', contacts=':contacts', email=':email', order_num=':orderNum'  
+		where id = ':orgId'  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-recoverOrgById" name="恢复单位">
+		<content>
+		UPDATE t_org SET status='R' WHERE id = ':orgId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-getOrgTreeValidDataById" name="获取组织及下属组织数据树">
+		<content>	
+        select id, org_name, org_name as text, org_code, parent_id, status, order_num  
+        from t_org  where FIND_IN_SET(id,  getOrgChildLst(':orgId')) and status in('N','R') ORDER BY order_num asc 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-getOrgTreeDataById" name="获取组织及下属组织数据树">
+		<content>	
+        select id, org_name, org_name as text, org_code, parent_id, status, order_num  
+        from t_org  where FIND_IN_SET(id,  getOrgChildLst(':orgId')) ORDER BY order_num asc 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-getOrgListDataById" name="获取组织及下属组织数据列表">
+		<content>	
+        select o.id, o.parent_id, o.org_name, o.org_code, o.address, o.telephone, o.contacts, o.email, o.status, o.create_date, o.order_num ,
+        case when o.parent_id = 'ROOT' then '' else (select org_name from t_org where id = o.parent_id) end as parent_name
+        from t_org o where FIND_IN_SET(id,  getOrgChildLst(':orgId'))  [ AND instr(org_name,':orgName') > 0 ] ORDER BY order_num asc 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-checkOrgExistsByOrgName" name="检查组织名是否存在">
+		<content>
+		SELECT COUNT(*) as countNum FROM t_org WHERE id != ':orgId' AND org_name = ':orgName'
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-getOrgById" name="根据ID获取组织">
+		<content>
+		SELECT id, parent_id, org_name, org_code, address, telephone, contacts, email, status,order_num create_date
+		FROM t_org 
+		WHERE id = ':orgId'  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-checkOrgHasUser" name="检查组织下面是否维护了用户">
+		<content>
+		SELECT count(*) as countNum from t_user where status in ('N','R') and  org_id = ':orgId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-checkOrgHasChildren" name="检查组织下面是否包含下级组织">
+		<content>
+		SELECT count(*) as countNum from t_org where parent_id = ':orgId' and status in ('N','R')
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-org-deleteOrgById" name="删除组织">
+		<content>
+		UPDATE t_org SET status='D' WHERE id = ':orgId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+</sqls>

@@ -1,0 +1,172 @@
+body {
+	font-family: 'Microsoft Yahei', verdana;
+	line-height: 1.666;
+	background: #fff;
+}
+
+.div-clean {
+	clear: both;
+}
+
+.div-float {
+	float: left;
+}
+
+.header-container {
+	height: 50px;
+	width: 100%;
+	background-color: #0075c7;
+    position: absolute;
+}
+
+.logo-text {
+	position: relative;
+	top: 10px;
+	font-size: large;
+	font-weight: normal;
+	letter-spacing: 3px;
+	width:20%;
+}
+
+.header-tab {
+	z-index: 1;
+	position: relative;
+	top: 24px;
+	left: 45px;
+	width: 90%;
+	height: 32px;
+}
+
+
+.login-info {
+	position: relative;
+	top: 5px;
+	left: 5px;
+	height: 26px;
+	color: #ffc2c2;
+	float:left;
+}
+
+.panel-title {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+.accordion-header {
+	height: 20px;
+	width: 100%;
+	cursor: pointer;
+}
+
+.accordion-header-selected {
+	background: #ffe48d;
+}
+
+.accordion-header-mouseover {
+	background: #ffe48d;
+}
+
+.icon-func {
+	display: block;
+	height: 24px;
+	width: 24px;
+	background: url(image/icon-func.png) left no-repeat;
+}
+
+.header-button {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	width: 100px;
+	height: 22px;
+	color: #000000;
+	float: left;
+}
+
+.bt-logout {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	width: 40px;
+	height: 22px;
+	color: #ffc2c2;
+	text-align: center;
+	cursor: pointer;
+	float: left;
+}
+
+.bt-mouseover {
+	background-color: #0F6099;
+	border-radius: 100px 100px 100px 100px;
+}
+
+.bt-reset-pwd {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	width: 60px;
+	height: 22px;
+	color: #ffc2c2;
+	text-align: center;
+	border-radius: 100px 100px 100px 100px;
+	cursor: pointer;
+	float: left;
+}
+/*
+*/
+ul, ol, li {
+    list-style: none;
+}
+
+.navitem{
+	float:left;
+	color: #fff;
+    text-decoration: none;
+    font-size:15px;
+}
+.navitem a{
+	height:45px;
+}
+.navitem-split{
+	float:left;
+	widht:5px;
+}
+
+.menu-item {
+	z-index: 1;
+	position: relative;
+	top: 0px;
+	width: 100px;
+	height: 32px;
+	float: left;
+	font-size: 16px;
+	text-align: center;
+	background: #0075c7;
+	border-style: solid;
+	border-radius: 15px 15px 15px 15px;
+	border-width: thin;
+	border-bottom: none;
+	border-color: #0075c7;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.menu-item-over {
+	z-index: 1;
+	position: relative;
+	top: 0px;
+	width: 100px;
+	height: 32px;
+	float: left;
+	color:#000000;
+	font-size: 16px;
+	text-align: center;
+	background: #eee;
+	border-style: solid;
+	border-radius: 15px 15px 15px 15px;
+	border-width: thin;
+	border-bottom: none;
+	border-color: #ffc2c2;
+	margin-left: 5px;
+	cursor: pointer;
+}

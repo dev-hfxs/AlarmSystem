@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-processor-getBoxsTree" name="获取所有的机箱信息用于树展示">
+		<content>
+		 select id, box_number, nfc_number from t_machine_box where 1=1  order by box_number asc
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-addProcessor" name="添加处理器">
+		<content>
+		 insert into t_processor(id, machine_box_id, nfc_number, moxa_number, online, ip, create_date) 
+		 values (':processorId', ':machineBoxId', ':nfcNumber', ':moxaNumber', 'N', ':ip', ':createDate' ) 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-getProcessorsByBoxId" name="根据machineBoxId处理器">
+		<content>
+		 select id, machine_box_id, nfc_number, moxa_number, online, ip, create_date from t_processor where machine_box_id = ':machineBoxId'  order by create_date asc 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-getProcessorById" name="根据ID获取处理器">
+		<content>
+		 select id, machine_box_id, nfc_number, moxa_number, online, ip, create_date from t_processor where id = ':processorId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-updateProcessor" name="修改处理器">
+		<content>
+		 update t_processor set nfc_number = ':nfcNumber', moxa_number=':moxaNumber', ip=':ip' where id = ':processorId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-deleteProcessor" name="删除处理器">
+		<content>
+		 delete from t_processor where id = ':processorId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-checkNfcNumber" name="检查处理器NFC序列号是否存在">
+		<content>
+		 select count(*) as countNum from t_processor where id != ':processorId' and nfc_number = ':nfcNumber'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-checkMoxaNumber" name="检查处理器Moxa序列号是否存在">
+		<content>
+		 select count(*) as countNum from t_processor where id != ':processorId' and moxa_number = ':moxaNumber'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-checkProcessorHasDetector" name="检查处理器是否包含探测器">
+		<content>
+		 select count(*) as countNum from t_detector where processor_id = ':processorId'  
+		</content>
+		<description></description>
+	</sql>
+</sqls>

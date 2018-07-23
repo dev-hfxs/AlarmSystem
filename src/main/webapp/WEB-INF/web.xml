@@ -49,10 +49,12 @@
 			<param-value>system/login/login.jsp</param-value>
 		</init-param>
 	</filter>
+	<!-- -->
 	<filter-mapping>
 		<filter-name>AuthFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	 
 	<filter>
 		<description>过滤编码配置</description>
 		<filter-name>encodingFilter</filter-name>

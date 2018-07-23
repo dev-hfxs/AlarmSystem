@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-log-logSession" name="记录登录信息">
+		<content>
+		 INSERT INTO t_session_log (id, session_id, user_name, login_date, client_ip, remark) 
+		 VALUES (':id', ':sessionId', ':userName', ':loginDate', ':clientIp', ':remark')  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-log-logAdminOperation" name="记录管理员操作日志">
+		<content>
+		 INSERT INTO t_admin_log (id, user_name, operation_date, operation_module, operation_desc) 
+		 VALUES (':id', ':userName', ':operationDate', ':operationModule', ':operationDesc')  
+		</content>
+		<description></description>
+	</sql>
+	
+</sqls>

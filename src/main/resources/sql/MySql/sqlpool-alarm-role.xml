@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>	
+	<sql id="alarm-role-getDefinedRoles" name="获取维护的角色列表">
+		<content>
+		SELECT id, role_name, role_type, sys_flag, home_page, role_desc, create_date 
+		FROM t_role r 
+		WHERE role_type in ('M','B') [ and instr(role_name, ':roleName') > 0 ] order by role_type, create_date 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-getRoleById" name="根据ID获取角色">
+		<content>
+		SELECT id, role_name, role_type, sys_flag, home_page, role_desc, create_date 
+		FROM t_role r WHERE id = ':roleId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-addRole" name="添加角色">
+		<content>
+		insert into t_role(id, role_name, role_type, sys_flag, home_page, role_desc, creator, create_date) 
+		values (':roleId', ':roleName', 'B', 'N', '', ':roleDesc', ':creator', ':createDate')  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-updateRole" name="修改角色">
+		<content>
+		update t_role set role_name = ':roleName', role_desc=':roleDesc' where id = ':roleId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-deleteRoleById" name="删除角色">
+		<content>
+		delete from t_role where id = ':roleId' 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-checkExistsRoleName" name="检查角色名是否存在">
+		<content>
+		SELECT COUNT(*) as countNum FROM t_role WHERE id != ':roleId' AND role_name = ':roleName'
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-checkRoleHasUser" name="检查角色是否分配用户">
+		<content>
+		SELECT COUNT(*) as countNum FROM t_user WHERE status in('N','R') AND id in (select user_id from t_user_role where role_id = ':roleId' )
+		</content>
+		<description>
+		</description>
+	</sql>
+	<sql id="alarm-role-getRoleAllotUsers" name="获取角色已分配的用户">
+		<content>
+		SELECT u.id, u.user_name, u.full_name, u.sex, o.org_name from t_user u
+		left join t_org o on u.org_id = o.id
+		where u.id in (select user_id from t_user_role where role_id = ':roleId') 
+		</content>
+		<description>
+		</description>
+	</sql>
+	<sql id="alarm-role-getRoleNotAllotUsers" name="获取角色未分配的用户">
+		<content>
+		SELECT u.id, u.user_name, u.full_name, u.sex, o.org_name from t_user u 
+		left join t_org o on u.org_id = o.id 
+		where u.id != 'u8952c8666964e07a9a285b10d706a61' and u.status in('N','R') and u.id not in (select user_id from t_user_role where role_id = ':roleId') 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-addRoleUser" name="增加角色与用户的关联">
+		<content>
+		insert into t_user_role(id, user_id, role_id) values (':id', ':userId', ':roleId') 
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-deleteRoleUser" name="删除角色与用户的关联">
+		<content>
+		delete from t_user_role where user_id = ':userId' and role_id = ':roleId'  
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-addRoleFunc" name="新增角色与功能的关联">
+		<content>
+		insert into t_role_res(id, role_id, res_type, res_id) values(':id', ':roleId', ':resType', ':resId')   
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-deleteRoleFunc" name="删除角色与功能的关联">
+		<content>
+		delete from t_role_res where role_id =':roleId' and res_type = 'M' and res_id = ':resId'   
+		</content>
+		<description>
+		</description>
+	</sql>
+	
+	<sql id="alarm-role-getRoleAllotFuncs" name="获取角色关联的功能用于分配">
+		<content>
+		select id, menu_name as name, parent_id, parent_id as pId, 
+		case when (select count(*) as countNum from t_menu t0 where t0.parent_id = m.id) > 0 then 'true' else 'false' end as isParent,
+		case when (select count(*) from t_role_res t2 where t2.res_id = m.id and t2.role_id = ':roleId') > 0 then 'true' else 'false' end as checked 
+		from t_menu m where FIND_IN_SET(id,getMenuChildLst('ROOT')) 
+		</content>
+		<description>
+		</description>
+	</sql>
+</sqls>

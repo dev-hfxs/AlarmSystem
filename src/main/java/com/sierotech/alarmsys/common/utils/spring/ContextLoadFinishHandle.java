@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent; 
 import org.springframework.stereotype.Component;
 
+import com.sierotech.alarmsys.common.utils.BaseDataInitializor;
 import com.sierotech.alarmsys.common.utils.SQLPoolInitializor;
 
 @Component
@@ -18,14 +19,15 @@ ApplicationListener<ContextRefreshedEvent>{
 	@Autowired
 	private SQLPoolInitializor sqlPoolInit;
 	
-//	@Autowired
-//	private DataSourceInitializor dataSrcInit;
+	@Autowired
+	private BaseDataInitializor baseDataInit;
 	
 	@Override 
 	public void onApplicationEvent(ContextRefreshedEvent event) { 
 		if(event.getApplicationContext().getDisplayName().startsWith("Root WebApplicationContext")){
 			sqlPoolInit.run();
 			
+			baseDataInit.run();
 		}
 	}
 }

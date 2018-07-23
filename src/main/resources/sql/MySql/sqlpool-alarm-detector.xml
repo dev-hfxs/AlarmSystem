@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-detector-getBoxsAndProcessor" name="获取所有的机箱信息用于树展示">
+		<content>
+		 select id, name, nfc_number, type,pId  from (
+		 	select id, box_number as name, nfc_number, '' as pId, 'M' as type  from t_machine_box where 1=1 
+		 	union 
+		 	select id, nfc_number as name, nfc_number, machine_box_id as pId, 'P' as type  from t_processor where 1=1 
+		 ) tt order by type, pId, name asc 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-detector-addDetector" name="添加探测器">
+		<content>
+		 insert into t_detector(id, detector_seq, processor_id, nfc_number, longitude, latitude, pos_desc, order_num) 
+		 values (':detectorId', ':detectorSeq', ':processorId', ':nfcNumber', :longitude, :latitude, ':posDesc', :orderNum) 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-detector-getDetectorById" name="根据ID获取探测器">
+		<content>
+		 select id, detector_seq, processor_id, nfc_number, longitude, latitude, pos_desc, order_num from t_detector where id = ':detectorId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-detector-getDetectorsByProcessorId" name="根据处理器ID获取探测器列表">
+		<content>
+		 select id, detector_seq, processor_id, nfc_number, longitude, latitude, pos_desc, order_num from t_detector where processor_id = ':processorId' order by order_num  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-detector-updateDetector" name="修改探测器">
+		<content>
+		 update t_detector set detector_seq = ':detectorSeq', nfc_number = ':nfcNumber', longitude=:longitude, latitude=:latitude, pos_desc=':posDesc' where id = ':detectorId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-detector-deleteDetector" name="删除探测器">
+		<content>
+		 delete from t_detector where id = ':detectorId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-detector-checkNfcNumber" name="检查探测器NFC序列号是否存在">
+		<content>
+		 select count(*) as countNum from t_detector where id != ':detectorId' and nfc_number = ':nfcNumber'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-detector-getDetectorNumByProcessorId" name="根据处理器ID获取探测器数">
+		<content>
+		SELECT count(*) AS countNum FROM t_detector WHERE processor_id = ':processorId' 
+		</content>
+		<description></description>
+	</sql>
+	
+</sqls>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tilemap tilemapservice="http://www.osgeo.org/services/tilemapservice.xml" version="1.0.0">
+    <title>未命名(48)_TMS</title>
+    <abstract/>
+    <srs>OSGEO:41001</srs>
+    <vsrs/>
+    <boundingbox maxx="12732503.605891797691584" maxy="3594605.127445101737976" minx="12725394.128703422844410" miny="3587845.385304510593414"/>
+    <origin x="-20037508.3427890" y="-20037508.3427890" profile="global-mercator"/>
+    <tileformat extension="jpg" mime-type="image/jpg" height="256" width="256"/>
+    <tilesets>
+        <tileset href="" order="14" units-per-pixel="9.5546285356"/>
+        <tileset href="" order="15" units-per-pixel="4.7773142678"/>
+        <tileset href="" order="16" units-per-pixel="2.3886571339"/>
+        <tileset href="" order="17" units-per-pixel="1.1943285670"/>
+        <tileset href="" order="18" units-per-pixel="0.5971642835"/>
+    </tilesets>
+    <tileset/>
+</tilemap>

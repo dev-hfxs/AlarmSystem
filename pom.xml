@@ -81,13 +81,13 @@
 	    <artifactId>jedis</artifactId>
 	    <version>2.9.0</version>
 	</dependency>
-<!-- 
-	<dependency>
-    	<groupId>org.apache.commons</groupId>
-    	<artifactId>commons-vfs2</artifactId>
-    	<version>2.0</version>
-	</dependency>
- -->
+
+    <dependency>
+     <groupId>commons-codec</groupId>
+     <artifactId>commons-codec</artifactId>
+     <version>1.10</version>
+    </dependency>
+
 <dependency>
     <groupId>ant</groupId>
     <artifactId>ant</artifactId>
@@ -100,6 +100,12 @@
     <version>1.6.1</version>
 </dependency>
 
+	<dependency>
+  		<groupId>jaxen</groupId>
+  		<artifactId>jaxen</artifactId>
+		<version>1.1.6</version>
+	</dependency>
+	
 <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>slf4j-api</artifactId>

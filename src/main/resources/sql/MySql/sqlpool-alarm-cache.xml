@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-cache-processor" name="缓存处理器信息">
+		<content>
+		 select p.id, p.nfc_number, p.moxa_number, p.ip, m.longitude, m.latitude, m.pos_desc, m.box_number
+		 from t_processor p
+		 left join t_machine_box m on p.machine_box_id = m.id  
+		 order by m.box_number asc 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-cache-detector" name="缓存探测器信息">
+		<content>
+		 select d.id, d.detector_seq, d.processor_id, d.nfc_number, d.longitude, d.latitude, d.pos_desc, d.order_num 
+		 from t_detector d where d.processor_id = ':processorId' order by d.order_num asc 
+		</content>
+		<description></description>
+	</sql>
+	
+</sqls>
