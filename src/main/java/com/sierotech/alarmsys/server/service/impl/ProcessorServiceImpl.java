@@ -22,8 +22,11 @@ import org.springframework.stereotype.Service;
 import com.sierotech.alarmsys.common.BusinessException;
 import com.sierotech.alarmsys.common.utils.ConfigSQLUtil;
 import com.sierotech.alarmsys.common.utils.DateUtils;
+import com.sierotech.alarmsys.common.utils.JsonUtil;
 import com.sierotech.alarmsys.common.utils.LogOperationUtil;
 import com.sierotech.alarmsys.common.utils.UUIDGenerator;
+import com.sierotech.alarmsys.context.ProcessContext;
+import com.sierotech.alarmsys.monitor.ProcessorMonitor;
 import com.sierotech.alarmsys.server.service.IProcessorService;
 
 /**
@@ -237,6 +240,155 @@ public class ProcessorServiceImpl implements IProcessorService{
 			throw new BusinessException("删除处理器错误,访问数据库异常.");
 		}
 		// 记录日志
-		LogOperationUtil.logAdminOperation(adminUser, "机箱维护", "删除机箱:[" + processorObj.get("nfc_number").toString() + "].");
+		LogOperationUtil.logAdminOperation(adminUser, "处理器维护", "删除处理器:[" + processorObj.get("nfc_number").toString() + "].");
+	}
+
+	
+	@Override
+	public void update4Start(String adminUser, String processorId) throws BusinessException {
+		// 先获取处理器
+		String preSelectSql = ConfigSQLUtil.getCacheSql("alarm-processor-getProcessorById");
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("processorId", processorId);
+		String selectSql = ConfigSQLUtil.preProcessSQL(preSelectSql, paramsMap);
+		List<Map<String, Object>> alProcessors;
+		try {
+			alProcessors = springJdbcDao.queryForList(selectSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("启动处理器错误, 获取处理器访问数据库异常.");
+		}
+		Map<String, Object> processorObj;
+		if (alProcessors != null && alProcessors.size() > 0) {
+			processorObj = alProcessors.get(0);
+		} else {
+			throw new BusinessException("启动处理器错误, 未查询到处理器.");
+		}
+		//获取探测器数
+		String getDetectorNumPreSql = ConfigSQLUtil.getCacheSql("alarm-detector-getDetectorNumByProcessorId");
+		paramsMap.clear();
+		paramsMap.put("processorId", processorId);
+		String getDetectorNumSql =  ConfigSQLUtil.preProcessSQL(getDetectorNumPreSql, paramsMap);
+		int detectorNum = 0;
+		Map<String, Object> countMap = null; 
+		try {
+			countMap = springJdbcDao.queryForMap(getDetectorNumSql);
+		} catch (DataAccessException dae) {
+			log.info("获取处理器探测器信息出错.");
+		}
+		if(countMap != null) {
+			String countNum = countMap.get("countNum").toString();
+			try {
+				detectorNum = Integer.valueOf(countNum);
+			}catch(Exception e) {
+				//
+			}
+		}
+		if(detectorNum < 1) {
+			throw new BusinessException("处理器下未维护探测器,启动失败.");
+//			paramsMap.clear();
+//			paramsMap.put("id", UUIDGenerator.getUUID());
+//			paramsMap.put("processorId", processorId);
+//			paramsMap.put("operationDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
+//			paramsMap.put("startStatus", "0");
+//			paramsMap.put("errorInfo", "处理器未维护探测器，未启动.");
+//			// 记录处理器启动日志
+//			String addProcessorLogPreSql = ConfigSQLUtil.getCacheSql("alarm-processor-addProcessorLog");		
+//			String addProcessorLogSql =  ConfigSQLUtil.preProcessSQL(addProcessorLogPreSql, paramsMap);
+//			try {
+//				springJdbcDao.update(addProcessorLogSql);
+//			} catch (DataAccessException dae) {
+//				//
+//			}
+		}else {
+			String nfcNumber = processorObj.get("nfc_number").toString();
+			String longitude = processorObj.get("longitude").toString();
+			String latitude = processorObj.get("latitude").toString();
+			String ip = processorObj.get("ip").toString();
+			String posDesc = processorObj.get("pos_desc").toString();
+			Map<String,String> posMap = new HashMap<String, String>();
+			posMap.put("longitude", longitude);
+			posMap.put("latitude", latitude);
+			posMap.put("posDesc", posDesc);
+			
+			//String posInfo = "["+ longitude + "," + latitude + "]-" + posDesc;
+			String posInfo = JsonUtil.mapToJson(posMap);		
+			ProcessorMonitor pm = new ProcessorMonitor(ip, 4001, detectorNum, posInfo, nfcNumber, processorId);
+			paramsMap.clear();
+			paramsMap.put("id", UUIDGenerator.getUUID());
+			paramsMap.put("processorId", processorId);
+			paramsMap.put("operationDate", DateUtils.getNow(DateUtils.FORMAT_LONG));
+			
+			if(pm.connect()) {
+				// 连接上探测器, 设置处理器状态为启动成功, 启动监听
+				Thread tPM = new Thread(pm);
+				tPM.start();
+				// 设置处理器在线状态
+				String updateProcessorOnlinePreSql = ConfigSQLUtil.getCacheSql("alarm-processor-updateProcessorOnline");
+				Map<String, String> paramsMap2 = new HashMap<String, String>();
+				paramsMap2.clear();
+				paramsMap2.put("processorId", processorId);
+				paramsMap2.put("online", "Y");		
+				String updateProcessorOnlineSql =  ConfigSQLUtil.preProcessSQL(updateProcessorOnlinePreSql, paramsMap2);
+				try {
+					springJdbcDao.update(updateProcessorOnlineSql);
+				} catch (DataAccessException dae) {
+					//
+				}
+				ProcessContext.registerProcessorMonitor(nfcNumber, pm);
+				paramsMap.put("startStatus", "1");
+				paramsMap.put("errorInfo", "");
+			}else {
+				throw new BusinessException("不能连接处理器,未启动.");
+				//不能连接探测器, 设置处理器状态为启动失败
+				//paramsMap.put("startStatus", "2");
+				//paramsMap.put("errorInfo", "不能连接处理器,未启动.");
+			}
+			// 记录处理器启动日志
+			String addProcessorLogPreSql = ConfigSQLUtil.getCacheSql("alarm-processor-addProcessorLog");		
+			String addProcessorLogSql =  ConfigSQLUtil.preProcessSQL(addProcessorLogPreSql, paramsMap);
+			try {
+				springJdbcDao.update(addProcessorLogSql);
+			} catch (DataAccessException dae) {
+				//
+			}
+			// 记录日志
+			LogOperationUtil.logAdminOperation(adminUser, "处理器维护", "启动处理器监听:[" + processorObj.get("nfc_number").toString() + "].");
+		}
+	}
+
+	@Override
+	public void update4Stop(String adminUser, String processorId) throws BusinessException {
+		// 先获取处理器
+		String preSelectSql = ConfigSQLUtil.getCacheSql("alarm-processor-getProcessorById");
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("processorId", processorId);
+		String selectSql = ConfigSQLUtil.preProcessSQL(preSelectSql, paramsMap);
+		List<Map<String, Object>> alProcessors;
+		try {
+			alProcessors = springJdbcDao.queryForList(selectSql);
+		} catch (DataAccessException dae) {
+			throw new BusinessException("停止处理器错误, 获取处理器访问数据库异常.");
+		}
+		Map<String, Object> processorObj;
+		if (alProcessors != null && alProcessors.size() > 0) {
+			processorObj = alProcessors.get(0);
+		} else {
+			throw new BusinessException("停止处理器错误,未查询到处理器.");
+		}
+		// 设置处理器在线状态
+		String updateProcessorOnlinePreSql = ConfigSQLUtil.getCacheSql("alarm-processor-updateProcessorOnline");
+		paramsMap.clear();
+		paramsMap.put("processorId", processorId);
+		paramsMap.put("online", "N");		
+		String updateProcessorOnlineSql =  ConfigSQLUtil.preProcessSQL(updateProcessorOnlinePreSql, paramsMap);
+		try {
+			springJdbcDao.update(updateProcessorOnlineSql);
+		} catch (DataAccessException dae) {
+			//
+		}
+		ProcessContext.unRegisterProcessorMonitor(processorObj.get("nfc_number").toString());
+				
+		// 记录日志
+		LogOperationUtil.logAdminOperation(adminUser, "处理器维护", "停止处理器监听:[" + processorObj.get("nfc_number").toString() + "].");
 	}
 }

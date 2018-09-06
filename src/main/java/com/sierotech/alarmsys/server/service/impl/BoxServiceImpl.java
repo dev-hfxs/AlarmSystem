@@ -210,11 +210,11 @@ public class BoxServiceImpl implements IBoxService{
 		}
 
 		// 检查机箱下面是否维护了处理器
-		String checkOrgHasUserPreSql = ConfigSQLUtil.getCacheSql("alarm-box-checkBoxHasProcessor");
-		String checkOrgHasUserSql = ConfigSQLUtil.preProcessSQL(checkOrgHasUserPreSql, paramsMap);
+		String checkBoxHasProcessorPreSql = ConfigSQLUtil.getCacheSql("alarm-box-checkBoxHasProcessor");
+		String checkBoxHasProcessorSql = ConfigSQLUtil.preProcessSQL(checkBoxHasProcessorPreSql, paramsMap);
 		int num = 0;
 		try {
-			Map<String, Object> recordMap = springJdbcDao.queryForMap(checkOrgHasUserSql);
+			Map<String, Object> recordMap = springJdbcDao.queryForMap(checkBoxHasProcessorSql);
 			if (recordMap != null) {
 				num = Integer.valueOf(recordMap.get("countNum").toString());
 			}

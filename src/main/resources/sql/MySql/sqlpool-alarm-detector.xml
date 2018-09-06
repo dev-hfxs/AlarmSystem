@@ -61,4 +61,12 @@
 		<description></description>
 	</sql>
 	
+	<sql id="alarm-detector-getDetectorsByBoxId" name="根据机箱ID获取探测器">
+		<content>
+		select nfc_number, longitude, latitude 
+        from t_detector a	
+		where exists ( select b.id from t_processor b where b.machine_box_id = ':boxId' and a.processor_id = b.id) 		
+		</content>
+		<description></description>
+	</sql>
 </sqls>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-alarminfo-add" name="添加报警信息">
+		<content>
+		 insert into t_alarm_info(id, device_type, nfc_number, device_info, longitude, latitude, pos_desc, alarm_type, alarm_date, status, alarm_desc) 
+		 values (':id', ':deviceType', ':nfcNumber', ':deviceInfo', :longitude, :latitude, ':posDesc', ':alarmType', ':alarmDate', 'N', ':alarmDesc' ) 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-getNewAlarm" name="根据上次报警日期查询最新的报警信息">
+		<content>
+		 select id, device_type, nfc_number, device_info, longitude, latitude, pos_desc, alarm_type, alarm_date, status, alarm_desc, is_valid, danger_level, confirm_date, confirm_person
+		 from  t_alarm_info where status in('N','I')  [ and alarm_date > ':lastDate' ] order by alarm_date asc  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-getAllAlarm" name="获取所有的报警信息">
+		<content>
+		 select id, device_type, nfc_number, device_info, longitude, latitude, pos_desc, alarm_type, alarm_date, status, alarm_desc, is_valid, danger_level, confirm_date, confirm_person
+		 from  t_alarm_info where status in('N','I') order by alarm_date asc  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-getHistoryAlarm" name="获取历史报警信息">
+		<content>
+		 select a.id, a.device_type, a.nfc_number, a.device_info, a.longitude, a.latitude, concat('经纬度[',a.longitude,',', a.latitude,'];位置描述[', a.pos_desc,']') as pos_desc, a.alarm_type, a.alarm_date, a.status, a.alarm_desc, a.is_valid, a.danger_level, a.confirm_date, a.confirm_person,
+		 (select full_name from t_user u where u.id = a.confirm_person) as full_name 
+		 from  t_alarm_info a where 1=1
+		 [ and status = ':status' ] [ and alarm_type = ':alarmType' ] 
+		 [ and alarm_date &gt;=':alarmBeginDate'] [ and alarm_date &lt;= ':alarmEndDate' ]
+		 [ and confirm_date &gt;=':confirmBeginDate'] [ and confirm_date &lt;= ':confirmEndDate' ]
+		 order by alarm_date desc 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-getHandleLog" name="获取处警记录">
+		<content>
+		 select a.id, a.alarm_desc, concat('经纬度[',a.longitude,',', a.latitude,'];位置描述[', a.pos_desc,']') as pos_desc , a.alarm_date, a.confirm_date, a.is_valid,
+		 (select full_name from t_user u where u.id = a.confirm_person) as confirm_person,
+		 (select full_name from t_user u where u.id = p.process_person) as process_person, 
+         p.process_date, p.process_method, p.process_result
+         from t_alarm_info a
+         left join t_alarm_process p on a.id = p.alarm_id
+         where 1=1 [ and a.alarm_date &gt;=':alarmBeginDate'] [and a.alarm_date &lt;= ':alarmEndDate' ] 
+          [ and a.confirm_date &gt;=':confirmBeginDate'] [and a.confirm_date &lt;= ':confirmEndDate' ] [ and p.process_date &gt;=':processBeginDate' ] [ and p.process_date &lt;= ':processEndDate' ] 
+         order by alarm_date desc 
+		</content>
+		<description></description>
+	</sql>
+	<sql id="alarm-alarminfo-getAlarminfoById" name="根据报警ID获取报警信息">
+		<content>
+		 select id, device_type, nfc_number, device_info, longitude, latitude, pos_desc, alarm_type, alarm_date, status, alarm_desc, is_valid, danger_level, confirm_date, confirm_person, remark 
+		 from  t_alarm_info where id = ':alarmId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-getAlarmConfirminfoById" name="根据报警ID获取报警及确警信息">
+		<content>
+		 select a.id, a.device_type, a.nfc_number, a.device_info, a.longitude, a.latitude, a.pos_desc, a.alarm_type, a.alarm_date, a.status, a.alarm_desc, a.is_valid, a.danger_level, a.confirm_date, a.confirm_person, a.remark,  
+		 b.process_person 
+		 from  t_alarm_info a 
+		 left join t_alarm_process b on a.id = b.alarm_id 
+		 where a.id = ':alarmId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-update4Confirm" name="确认报警时更新报警状态">
+		<content>
+		update t_alarm_info set status= ':status', is_valid= ':isValid' , confirm_date = ':confirmDate', confirm_person=':confirmPerson', remark=':remark'  where id = ':alarmId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-updateAlarmStatus" name="处理报警时更新报警状态">
+		<content>
+		update t_alarm_info set status= ':status' where id = ':alarmId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-updateAlarmIsValid" name="恢复报警为有效">
+		<content>
+		update t_alarm_info set status= ':status', is_valid=':isValid' where id = ':alarmId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-checkAlarmSetProcess" name="检查报警信息是否设置处理">
+		<content>
+		select count(*) as countNum from t_alarm_process where alarm_id = ':alarmId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	
+	<sql id="alarm-alarminfo-update4Process" name="处理报警时更新处置结果">
+		<content>
+		update t_alarm_process set process_date=':processDate', process_method = ':processMethod', process_result=':processResult', person_feature=':personFeature',alarm_image=':alarmImage',alarm_reason=':alarmReason',out_police=':outPolice'     
+		where alarm_id = ':alarmId' and process_person = ':processPerson'  
+		</content>
+		<description></description>
+	</sql>	
+	
+	<sql id="alarm-alarminfo-addAlarmProcess" name="确认报警添加处理人">
+		<content>
+		 insert into t_alarm_process(id, alarm_id, process_person) values(':id', ':alarmId', ':processPerson')
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-updateAlarmProcess" name="确认报警修改处理人">
+		<content>
+		 update t_alarm_process set process_person=':processPerson' where alarm_id = ':alarmId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-deleteAlarmProcessor" name="取消分配报警处理人">
+		<content>
+		delete from t_alarm_process where alarm_id = ':alarmId' and process_person = ':processPerson' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-getUserUnProcessAlarms" name="处警用户获取待处理报警信息">
+		<content>
+		 select id, device_type, nfc_number, device_info, longitude, latitude, pos_desc, alarm_type, alarm_date, status, alarm_desc, is_valid, danger_level, confirm_date, confirm_person
+		 from  t_alarm_info where status ='I' and id in (select alarm_id from t_alarm_process where process_person = ':userId') [ and alarm_date > ':lastDate' ] order by alarm_date asc 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-alarminfo-getAlarmProcessResult" name="获取报警处理结果">
+		<content>
+		 select a.id, a.device_type, a.nfc_number, a.device_info, a.longitude, a.latitude, a.pos_desc, a.alarm_type, a.alarm_date, a.status, a.alarm_desc, a.is_valid, a.danger_level, a.confirm_date, a.confirm_person, a.remark, 
+		 b.process_date, b.process_person, b.process_method, b.process_result, b.person_feature, b.alarm_image, b.alarm_reason,b.out_police,
+		 c.full_name 
+		 from  t_alarm_info a
+		 left join t_alarm_process b on a.id = b.alarm_id 
+		 left join t_user c on b.process_person = c.id  
+		  where a.id = ':alarmId' 
+		</content>
+		<description></description>
+	</sql>
+</sqls>

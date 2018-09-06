@@ -68,7 +68,21 @@
 					<img src="<%=path%>/style/default/image/func.png" /><a>&nbsp;&nbsp;探测器维护</a>
 				</div>
 			</div>
-			
+			<div class="panel-header accordion-header" itemUrl="<%=path%>/device/camera/cameraList.jsp">
+				<div class="panel-title">
+					<img src="<%=path%>/style/default/image/func.png" /><a>&nbsp;&nbsp;摄像机维护</a>
+				</div>
+			</div>
+			<div class="panel-header accordion-header" itemUrl="<%=path%>/map/deviceDistribution.jsp">
+				<div class="panel-title">
+					<img src="<%=path%>/style/default/image/func.png" /><a>&nbsp;&nbsp;设备地图分布</a>
+				</div>
+			</div>
+			<div class="panel-header accordion-header" itemUrl="<%=path%>/device/cacheMgr.jsp">
+				<div class="panel-title">
+					<img src="<%=path%>/style/default/image/func.png" /><a>&nbsp;&nbsp;缓存管理</a>
+				</div>
+			</div>
 		</div>
 	</div>
 

@@ -3,19 +3,21 @@
 INSERT INTO t_user VALUES ('u8952c8666964e07a9a285b10d706a61', 'admin@sierotech.com', '系统管理员', 'o3f25612335a4d188020d617801ea7bf', '00000000', 'N', 'dd4b21e9ef71e1291183a46b913ae6f2', 'Y', 'F', null, null, null);
 
 /* 初始 菜单 */
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfacd0','电子地图','m.electronic.map','','','ROOT',2);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfacd0','报警动态','m.alarm.dynamic','/map/alarmDynamic.jsp','','ROOT',2);
 
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfacb5','历史报警','m.history.alarm','','','ROOT',3);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfacx8','警情处理','m.alarm.process','/map/alarmProcess.jsp','','ROOT',3);
 
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfafb8','视频回放','m.video.back','','','ROOT',4);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfacb5','历史报警','m.history.alarm','/alarm/historyAlarm.jsp','','ROOT',4);
 
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfacb7','处警记录','m.processor.log','','','ROOT',5);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfafb8','视频回放','m.video.back','','','ROOT',5);
 
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df989e','警情统计','m.alarm.statistics','','','ROOT',6);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9dfacb7','处警记录','m.processor.log','/alarm/alarmHandleLog.jsp','','ROOT',6);
 
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3c78','权限管理','m.auth.mgr','','','ROOT',7);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df989e','警情统计','m.alarm.statistics','','','ROOT',7);
 
-INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3c62','设备管理','m.device.mgr','','','ROOT',8);
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3c78','权限管理','m.auth.mgr','/auth/mgr.jsp','','ROOT',8);
+
+INSERT INTO  t_menu(id,menu_name,menu_code,menu_url,icon_url,parent_id,order_num) VALUES ('ma900252694f4bd99fa3e16ce9df3c62','设备管理','m.device.mgr','/device/mgr.jsp','','ROOT',9);
 
 /* 初始 角色 */
 INSERT INTO t_role(id,role_name,role_type,home_page,role_desc) VALUES('r0dd980638bc43efb2e01d362db3bbs2','接警岗','S','','值班员,查看系统报警的用户');
@@ -41,3 +43,5 @@ INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf
 INSERT INTO  t_role_res(id,role_id,res_type,res_id) VALUES ('rr5abe33b3ae4f459cf664859d9d1aq7','r0dd980638bc43efb2e01d362db3cd88','M','ma900252694f4bd99fa3e16ce9df3c62');
 
 
+/* 初始摄像机类型 */
+INSERT INTO t_camera_calss(id, vendor, vendor_code, model ) VALUES('ctdrk80638bc43efb2e01d362dbhk001','海康威视','hk','test01');

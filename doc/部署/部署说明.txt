@@ -1,0 +1,3 @@
+应用服务器使用tomcat,
+拷贝相应lib文件到tomcat的bin目录
+

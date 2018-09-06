@@ -95,4 +95,15 @@
 		<description>
 		</description>
 	</sql>
+	
+	<sql id="alarm-user-getAlarmHandlerUsers" name="获取处警的用户列表">
+		<content>
+		SELECT u.id, u.user_name, u.full_name, u.org_id, o.org_name, u.contact_number, u.status 
+		FROM t_user u 
+		LEFT JOIN t_org o ON u.org_id = o.id 
+		WHERE u.id in ( select user_id from t_user_role where role_id = 'r0dd980638bc43efb2e01d362db3cdf9') and u.status in ('N','R')
+		</content>
+		<description>
+		</description>
+	</sql>
 </sqls>

@@ -7,6 +7,7 @@ encoding//src/main/java/com/sierotech/alarmsys/common/utils/DateUtils.java=UTF-8
 encoding//src/main/java/com/sierotech/alarmsys/common/utils/EncodingDetect.java=UTF-8
 encoding//src/main/java/com/sierotech/alarmsys/common/utils/JsonUtil.java=UTF-8
 encoding//src/main/java/com/sierotech/alarmsys/common/utils/KeyUtil.java=UTF-8
+encoding//src/main/java/com/sierotech/alarmsys/common/utils/ProcessorMonitorInitializor.java=UTF-8
 encoding//src/main/java/com/sierotech/alarmsys/common/utils/SQLPoolInitializor.java=UTF-8
 encoding//src/main/java/com/sierotech/alarmsys/common/utils/SecretUtil.java=UTF-8
 encoding//src/main/java/com/sierotech/alarmsys/common/utils/SerializeUtil.java=UTF-8

@@ -7,7 +7,7 @@
  */
 var bdmapcfg = {
   'imgext':'.jpg', //瓦片图的后缀 ------ 根据需要修改，一般是 .png .jpg
-  'tiles_dir':'http://localhost:8080/imgSrv'   //瓦片图的目录，为空默认在 baidumap_v2/tiles/ 目录
+  //'tiles_dir':'http://localhost:8080/mapImgSrv'   //瓦片图的目录，为空默认在 baidumap_v2/tiles/ 目录
 };
 
 //////////////////下面的保持不动///////////////////////////////////

@@ -106,4 +106,46 @@ public class ProcessorMgrControl{
 		result.put("msg", "");
 		return result;
 	}
+	
+	@RequestMapping(value = "/start")
+	@ResponseBody
+	public Map<String, String> startProcessor(HttpServletRequest request) {		
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		String processorId = request.getParameter("id");
+		if(null == processorId) {
+			result.put("msg", "启动处理器错误, 缺少处理器ID.");
+			return result;
+		}
+		try {
+			processorService.update4Start(UserTool.getLoginUser(request).get("user_name"), processorId);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
+	
+	@RequestMapping(value = "/stop")
+	@ResponseBody
+	public Map<String, String> stopProcessor(HttpServletRequest request) {		
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("returnCode", "fail");
+		String processorId = request.getParameter("id");
+		if(null == processorId) {
+			result.put("msg", "停止处理器错误, 缺少处理器ID.");
+			return result;
+		}
+		try {
+			processorService.update4Stop(UserTool.getLoginUser(request).get("user_name"), processorId);
+		}catch(BusinessException be) {
+			result.put("msg", be.getMessage());
+			return result;
+		}
+		result.put("returnCode", "success");
+		result.put("msg", "");
+		return result;
+	}
 }

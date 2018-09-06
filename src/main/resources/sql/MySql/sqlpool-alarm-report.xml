@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-report-alarmNumByBoxid" name="获取机箱下的总报警数">
+		<content>
+		   select (select count(*) from t_alarm_info a where a.device_type = 'P' 
+				and exists ( select b.nfc_number from t_processor b where b.machine_box_id = ':boxId' and b.nfc_number = a.nfc_number)  
+				and alarm_date >= ':beginDate' 
+			) + (
+				select count(*) from t_alarm_info a where a.device_type = 'D' 
+				and exists ( select b.nfc_number from t_detector b where exists ( select c.id from t_processor c where c.machine_box_id = ':boxId' and c.id = b.processor_id) and a.nfc_number = b.nfc_number ) 
+				and a.alarm_date >= ':beginDate' 
+			) as countNum from dual 
+		</content>
+		<description></description>
+	</sql>
+	<sql id="alarm-report-alarmNumByMonth" name="获取某月份的总报警数">
+		<content>
+		   select count(*) as countNum from t_alarm_info where alarm_date >= ':beginDate' and alarm_date &lt;= ':endDate' 
+		</content>
+		<description></description>
+	</sql>
+</sqls>

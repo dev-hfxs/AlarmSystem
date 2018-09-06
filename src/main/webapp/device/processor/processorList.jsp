@@ -31,7 +31,7 @@
 				<th data-options="field:'nfc_number',width:120">NFC序列号</th>
 				<th data-options="field:'moxa_number',width:120">MOXA序列号</th>
 				<th data-options="field:'ip',width:100">IP</th>
-				<th data-options="field:'online',width:100">在线状态</th>
+				<th data-options="field:'online',width:100,formatter:fmStatus">在线状态</th>
 				<th data-options="field:'id',width:200,align:'center',formatter:showButtons">操作</th>
 			</tr>
 			</thead>
@@ -110,11 +110,26 @@ function onClick(event, treeId, treeNode, clickFlag){
 	$('#dg').datagrid('reload');
 }
 
+function fmStatus(val,row){
+	if(row.online == 'Y'){
+		return '<span>在线</span>';
+	}else if(row.online == 'N'){
+		return '<span>不在线</span>';
+	}else{
+		return '';
+	}
+}
+
 function showButtons(val,row){
 	var columnItem = '';
-	columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doUpdate(\''+val+'\')" style="width:80px;">修 改</a></span>&nbsp;&nbsp;';
-	columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doDelete(\''+val+'\')" style="width:80px;">删 除</a></span>&nbsp;&nbsp;';
-	
+	if(row.online == 'Y'){
+		columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doStop(\''+val+'\')" style="width:80px;">停 止</a></span>&nbsp;&nbsp;';
+	}else if(row.online == 'N'){
+		columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doUpdate(\''+val+'\')" style="width:80px;">修 改</a></span>&nbsp;&nbsp;';
+		columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doDelete(\''+val+'\')" style="width:80px;">删 除</a></span>&nbsp;&nbsp;';
+		columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="doStart(\''+val+'\')" style="width:80px;">启 动</a></span>&nbsp;&nbsp;';
+	}
+	columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="bindCamera(\''+val+'\')" style="width:80px;">关联摄像机</a></span>&nbsp;&nbsp;';
 	return columnItem;
 }
 
@@ -215,6 +230,93 @@ function doDelete(val){
 			});
 		}
 	});
+}
+
+function doStart(val){
+	$.messager.confirm('确认', '确认启动该处理器的监听?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/processor/mgr/start.do',
+			    data:{
+			    	'id':val
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data.returnCode == 'success'){
+			    		$.messager.alert('提示', '操作成功!', 'info', function(){
+				    		$('#dg').datagrid('reload');
+			    		});
+			    	}else{
+			    		$.messager.alert('提示',data.msg);
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		}
+	});
+}
+
+
+function doStop(val){
+	$.messager.confirm('确认', '确认停止该处理器的监听?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/processor/mgr/stop.do',
+			    data:{
+			    	'id':val
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	if(data.returnCode == 'success'){
+			    		$.messager.alert('提示', '操作成功!', 'info', function(){
+				    		$('#dg').datagrid('reload');
+			    		});
+			    	}else{
+			    		$.messager.alert('提示',data.msg);
+			    	}
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		}
+	});
+}
+
+function bindCamera(deviceId){
+	var curUrl = "<%=path%>/device/camera/bindDevice.jsp?deviceType=P&deviceId="+deviceId;
+	var content = '<iframe name="popContent" id="popContent" src="' + curUrl + '" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="关联摄像机" style="overflow:hidden;" ></div>'// style="overflow:hidden;"可以去掉滚动条
+	$(document.body).append(boarddiv);
+	var win = $('#msgwindow').dialog({
+		content : content,
+		width : '480',
+		height : '300',
+		modal : true,
+		title : '关联摄像机',
+		buttons: [{
+			text:'&nbsp;&nbsp;&nbsp;&nbsp;确定&nbsp;&nbsp;&nbsp;&nbsp;',
+			handler:function(){
+				$("#popContent")[0].contentWindow.okResponse();
+			}
+		},{
+			text:'&nbsp;&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;&nbsp;',
+			handler:function(){
+				$('#msgwindow').dialog('destroy');
+			}
+		}],
+		onClose : function() {
+			$(this).dialog('destroy');// 后面可以关闭后的事件
+		}
+	});
+	win.dialog('open');
+	win.window('center');
 }
 
 function doSearch(){

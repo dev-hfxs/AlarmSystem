@@ -83,6 +83,7 @@ public class CommonService {
 			return null;
 		}
 		String sql = ConfigSQLUtil.preProcessSQL(preSql, paramMap);
+
 		String countSql = ConfigSQLUtil.getCountSql(sql);
 		//有排序的字段参数，则增加排序
 		if(sqlOrderPart.length() > 0) {

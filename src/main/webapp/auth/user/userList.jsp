@@ -185,6 +185,30 @@ function doDelete(val){
 	});
 }
 
+function doRecover(val){
+	$.messager.confirm('确认', '确认恢复该用户?', function(r){
+		if(r){
+			$.ajax( {
+			    url:'<%=path%>/user/mgr/recover.do',
+			    data:{
+			    	'id':val
+			    },
+			    type:'post',
+			    async:false,
+			    dataType:'json',
+			    success:function(data) {
+			    	$.messager.alert('提示', '恢复成功!', 'info', function(){
+			    		$('#dg').datagrid('reload');
+		    		});
+			    },
+			    error : function(data) {
+			    	$.messager.alert('异常',data.responseText);
+		        }
+			});
+		}
+	});
+}
+
 function doSearch(){
 	var charKey = $("#inpKey" ).val();
 	var queryParams = $('#dg').datagrid('options').queryParams;

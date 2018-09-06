@@ -29,5 +29,9 @@ public interface IProcessorService {
 	public void updateProcessor(String adminUser,Map<String,Object> processorObj) throws BusinessException;
 	
 	public void deleteProcessor(String adminUser,String processorId) throws BusinessException;
-		
+	
+	public void update4Start(String adminUser,String processorId) throws BusinessException;
+	
+	public void update4Stop(String adminUser,String processorId) throws BusinessException;
+	
 }

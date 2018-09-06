@@ -6,7 +6,7 @@ create table t_alarm_info
 (
    id                   varchar(32)                    not null,
    device_type		char(1)			       null comment '报警设备:D探测器|P处理器',
-   device_id		varchar(32)                    null,
+   nfc_number		varchar(14)                    null,
    device_info          varchar(128)                   null comment '设备标识信息' ,
    longitude            decimal(10,7)                  null comment '经度' ,
    latitude             decimal(10,7)                  null comment '纬度' ,
@@ -19,6 +19,7 @@ create table t_alarm_info
    alarm_desc           varchar(256)                   null comment '警情描述' ,
    confirm_date         varchar(19)                    null comment '确认时间' ,
    confirm_person	varchar(64)                    null comment '确认人' ,
+   remark       	varchar(256)                   null comment '备注' ,
    constraint PK_T_ALARM_INFO_ID primary key (id)
 );
 
@@ -34,6 +35,10 @@ create table t_alarm_process
    process_person	varchar(64)                    null comment '处理人' ,
    process_method       varchar(128)                   null comment '处置方法' ,
    process_result       text                           null comment '处置结果' ,
+   person_feature       varchar(256)                   null comment '人员特征' ,
+   alarm_image          varchar(128)                   null comment '报警图片' ,
+   alarm_reason         char(1)                        null comment '报警原因代码' ,
+   out_police           varchar(64)                    null comment '出警人',
    constraint PK_T_ALARM_PROCESS_ID primary key (id)
 );
 
@@ -103,6 +108,7 @@ create table t_camera_class
 (
    id                   varchar(32)                    not null,
    vendor	        char(128)                      null comment '供应商' ,
+   vendor_code	        varchar(4)                     null comment '供应商编码' ,
    model                varchar(40)                    null comment '摄像机型号' ,
    constraint pk_t_camera_class_id primary key clustered (id)
 );
@@ -118,33 +124,41 @@ create table t_camera
    pos_desc             varchar(256)                   null comment '位置描述' ,
    longitude            decimal(10,7)                  null comment '经度' ,
    latitude             decimal(10,7)                  null comment '纬度' ,
-   address              varchar(256)                   null comment '访问地址',
+   ip                   varchar(16)                    null comment '摄像头ip',
+   channel_id	        varchar(10)		       null comment '对应录像机通道',
+   web_port             int                            null comment '摄像头web端口',
+   device_port          int                            null comment '摄像头设备端口',
+   recorder_ip		varchar(16)                    null comment '录像机ip',
+   recorder_port        int                            null comment '录像机web端口',
+   camera_user_name     varchar(20)                    null comment '摄像头登录名',
+   camera_password      varchar(20)                    null comment '摄像头登录密码',
+   recorder_user_name   varchar(20)                    null comment '录像机登录名',
+   recorder_password    varchar(20)                    null comment '录像机登录密码',
    constraint pk_t_camera_id primary key clustered (id)
 );
 
 /*  
 *  摄像头预置位信息
 */
-create table t_preset_position
+create table t_camera_preset
 (
    id                   varchar(32)                    not null,
    camera_id            varchar(32)                    null comment '摄像机id' ,
-   position_id          varchar(40)                    null comment '预置位标识' ,
-   position_name        varchar(256)                   null comment '预置位名称' ,
-   angle                decimal(7,4)                   null comment '角度' ,
-   focal_length         decimal(7,4)                   null comment '焦距' ,   
+   preset_num         int                            null comment '预置位编号' ,
+   preset_desc        varchar(256)                   null comment '预置位描述' ,
    constraint pk_t_preset_position_id primary key clustered (id)
 );
 
 /*  
-*  探测器与摄像头关联信息
+*  设备与摄像头关联信息
 */
-create table t_detector_camera
+create table t_camera_deploy
 (
    id                   varchar(32)                    not null,
-   detector_id	        varchar(32)                    null comment '探测器id' ,
+   device_type          char(1)                        null comment 'P:处理器,D:探测器',
+   device_id	        varchar(32)                    null comment '目标设备id' ,
    camera_id            varchar(32)                    null comment '摄像机id' ,
-   preset_position_id   varchar(32)                    null comment '预置位id' ,
+   preset_id            varchar(32)                    null comment '预置位id' ,
    constraint pk_t_detector_camera_id primary key clustered (id)
 );
 
@@ -289,4 +303,16 @@ CREATE FUNCTION `getOrgChildLst`(rootId varchar(32))
       END WHILE; 
       RETURN sTemp; 
     END;
+
+
+create table t_processor_log 
+(
+   id                   varchar(32)                    not null,
+   processor_id         varchar(32)                    null comment '处理器ID' ,
+   operation_date       varchar(19)                    null comment '操作时间' ,
+   start_status         char(1)                        null comment '启动状态' ,
+   error_info           varchar(128)                   null comment '启动错误描述' ,
+   constraint pk_t_processor_log_id primary key (id)
+);
+
 

@@ -105,15 +105,11 @@
 			win.dialog('open');
 			win.window('center');
 		});
-		var datas =  {total:2,rows:[{alarm_device:'探测器1',alarm_pos:'天山',alarm_date:'2018-01-01 00:00:00',alarm_status:'未处理'},{alarm_device:'探测器2',alarm_pos:'天山底',alarm_date:'2018-01-01 00:00:00',alarm_status:'未处理'}]};
 		
-		$('#dg').datagrid('loadData',datas);
 		$('.login-info').text(fullName);
 	});
 	 
-	function closeDialog(){
-		$('#msgwindow').dialog('destroy');
-	}
+	
 </script>
 <style>
 .layout-split-west {
@@ -129,7 +125,12 @@
 		style="width: 100%; height: 50px;">
 		<div class="header-container" style="width: 100%;">
 		    <div class="logo-text div-float">
-					&nbsp;航峰<font color="#CC0000">希萨</font> &nbsp;<font color="#FFFFFF">周界报警平台</font>
+		    	<div style="position:absolute;z-index:2">
+				<img src="<%=path%>/style/default/image/logo48.ico" height="36px" width="36px" style="position:relative;left:5px;bottom:3px;"/>
+				</div>
+				<div style="z-index:1;float:left">
+				  <img src="<%=path%>/style/default/image/logo-alarm.png" height="50px" width="250px" style="position:relative;left:35px;bottom:8px;"/>
+				</div>
 			</div>
 			<div style="float:left;height:50px;width:60%">
 					<ul id="nav-container" >
@@ -147,23 +148,6 @@
 			</div>
 		</div>
 	</div>
-
-	<div id="main-left"
-		data-options="region:'west',split:true,title:'报警动态信息'"	style="width: 430px;height:100%; padding: 0px;">
-		<div id="alarmInfo" style="overflow: hidden;height:100%">
-			<table id="dg" class="easyui-datagrid"  data-options="singleSelect:true,url:'',rownumbers:true,pageSize:30,height:'100%',pagination:true,method:'post',multiSort:true">
-		    <thead>
-			<tr>
-			    <th data-options="field:'alarm_device',width:90">报警设备</th>
-				<th data-options="field:'alarm_pos',width:110">报警位置</th>
-				<th data-options="field:'alarm_date',width:130">报警时间</th>
-				<th data-options="field:'alarm_status',width:60">状态</th>
-			</tr>
-			</thead>
-			</table>
-		</div>
-	</div>
-
 	<div id="main-right" data-options="region:'center'" style="width: 100%;height:100%;overflow:hidden;">
 		<iframe height="100%" width="100%" frameBorder="0" id="frmMain"	name="frmMain" src="" />
 	</div>

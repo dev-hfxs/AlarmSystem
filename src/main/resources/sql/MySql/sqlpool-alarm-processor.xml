@@ -24,7 +24,9 @@
 	
 	<sql id="alarm-processor-getProcessorById" name="根据ID获取处理器">
 		<content>
-		 select id, machine_box_id, nfc_number, moxa_number, online, ip, create_date from t_processor where id = ':processorId'  
+		 select p.id, p.machine_box_id, p.nfc_number, p.moxa_number, p.online, p.ip, p.create_date, m.longitude, m.latitude,m.pos_desc from t_processor p
+		 left join t_machine_box m on p.machine_box_id = m.id 
+		 where p.id = ':processorId'  
 		</content>
 		<description></description>
 	</sql>
@@ -63,4 +65,29 @@
 		</content>
 		<description></description>
 	</sql>
+	
+	<sql id="alarm-processor-getAll" name="获取所有处理器信息">
+		<content>
+		 select p.id, p.nfc_number, p.moxa_number, p.ip, m.longitude, m.latitude, m.pos_desc, m.box_number
+		 from t_processor p
+		 left join t_machine_box m on p.machine_box_id = m.id  
+		 order by m.box_number asc 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-processor-addProcessorLog" name="增加处理器日志">
+		<content>
+		 insert into t_processor_log(id, processor_id, operation_date, start_status, error_info) values (':id', ':processorId', ':operationDate', ':startStatus', ':errorInfo') 
+		</content>
+		<description></description>
+	</sql>
+
+	<sql id="alarm-processor-updateProcessorOnline" name="修改处理器是否在线">
+		<content>
+		 update t_processor set online=':online' where id = ':processorId' 
+		</content>
+		<description></description>
+	</sql>
+	
 </sqls>

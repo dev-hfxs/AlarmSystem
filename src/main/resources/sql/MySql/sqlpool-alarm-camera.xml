@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="alarm-camera-getAll" name="获取所有的摄像机信息">
+		<content>
+		 select a.id, a.class_id, a.camera_num, a.pos_desc, a.longitude, a.latitude, a.ip, a.web_port, a.device_port, a.recorder_ip, a.recorder_port, a.camera_user_name, a.camera_password, a.recorder_user_name, a.recorder_password,a.channel_id, 
+		 b.model, b.vendor
+		 from t_camera a 
+		 left join t_camera_class b on a.class_id = b.id 
+		 where 1=1 [ and instr(a.camera_num,':cameraNum') > 0 ] order by camera_num asc 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-getCameraById" name="根据id获取摄像机信息">
+		<content>
+		 select a.id, a.class_id, a.camera_num, a.pos_desc, a.longitude, a.latitude, a.ip, a.web_port, a.device_port, a.recorder_ip, a.recorder_port, a.camera_user_name, a.camera_password, a.recorder_user_name, a.recorder_password,a.channel_id,  
+		 b.model, b.vendor
+		 from t_camera a 
+		 left join t_camera_class b on a.class_id = b.id 
+		 where a.id = ':cameraId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-getAllCameraClass" name="获取所有的摄像机类型">
+		<content>
+		 select id, vendor, vendor_code, model 
+		 from t_camera_class  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-getCameraInfoByAlarmDevice" name="根据报警设备获取关联摄像头信息">
+		<content>
+		 select b.camera_num, b.pos_desc, b.longitude, b.latitude, b.ip, b.web_port, b.device_port, b.recorder_ip, b.recorder_port, b.camera_user_name, b.camera_password, b.recorder_user_name, b.recorder_password,b.channel_id,
+		 c.preset_num   
+		 from t_camera_deploy a
+		 left join t_camera b on a.camera_id = b.id 
+		 left join t_camera_preset c on a.camera_id = c.camera_id 
+		 where b.device_id = ':deviceId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-addCamera" name="添加摄像机">
+		<content>
+		 insert into t_camera(id, class_id, camera_num, pos_desc, longitude, latitude,ip ,web_port, device_port, recorder_ip, recorder_port, camera_user_name, camera_password, recorder_user_name, recorder_password, channel_id) 
+		 values(':id', ':classId', ':cameraNum', ':posDesc', :longitude, :latitude,':ip', :webPort, :devicePort, ':recorderIp', ':recorderPort', ':cameraUserName', ':cameraPassword', ':recorderUserName', ':recorderPassword', ':channelId') 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-updateCamera" name="更新摄像机">
+		<content>
+		 update t_camera set class_id=':classId', camera_num=':cameraNum', pos_desc=':posDesc', longitude=:longitude, latitude=:latitude,ip=':ip',
+		  web_port=:webPort, device_port=:devicePort, recorder_ip=':recorderIp', recorder_port=':recorderPort', camera_user_name=':cameraUserName',
+		   camera_password = ':cameraPassword', recorder_user_name=':recorderUserName', recorder_password=':recorderPassword', channel_id = ':channelId'    
+		 where id = ':cameraId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-deleteCameraById" name="删除摄像机">
+		<content>
+		 delete from t_camera where id = ':cameraId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-checkCameraBindDevice" name="检查摄像机是否关联设备">
+		<content>
+		 select count(*) countNum from t_camera_deploy where camera_id = ':cameraId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-getPresetsByCameraId" name="根据摄像机id获取预置位列表">
+		<content>
+		 select a.id, a.preset_num, a.preset_desc, a.camera_id, b.camera_num  
+		 from t_camera_preset a
+		 left join t_camera b on a.camera_id = b.id 
+		 where a.camera_id = ':cameraId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-getPresetById" name="根据id获取预置位">
+		<content>
+		 select id, preset_num, preset_desc, camera_id from t_camera_preset where id = ':presetId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-addCameraPreset" name="添加摄像机预置位">
+		<content>
+		 insert into t_camera_preset(id, camera_id, preset_num, preset_desc) values (':id', ':cameraId', :presetNum, ':presetDesc') 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-updateCameraPreset" name="更新摄像机预置位">
+		<content>
+		 update t_camera_preset set preset_num = :presetNum, preset_desc=':presetDesc' where id = ':presetId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-deleteCameraPresetByCameraId" name="根据摄像机ID删除摄像机预置位">
+		<content>
+		 delete from t_camera_preset where camera_id = ':cameraId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-deleteCameraPresetById" name="删除摄像机预置位">
+		<content>
+		 delete from t_camera_preset where id = ':presetId'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-checkPresetBindDevice" name="检查摄像机预置位是否关联设备">
+		<content>
+		 select count(*) countNum from t_camera_deploy where preset_id = ':presetId' 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-checkCameraNumber" name="检查摄像机编号是否存在">
+		<content>
+		 select count(*) as countNum from t_camera where id != ':cameraId' and camera_num = ':cameraNum'  
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-getCameraDeployByDeviceId" name="获取摄像机与设备关联关系">
+		<content>
+		 select id, camera_id, preset_id, device_id, device_type from t_camera_deploy where device_id = ':deviceId'   
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-addCameraDeploy" name="增加摄像机与设备关联关系">
+		<content>
+		 insert into t_camera_deploy(id, camera_id, preset_id, device_id, device_type) values (':id', ':cameraId', ':presetId', ':deviceId', ':deviceType')   
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-updateCameraDeploy" name="修改摄像机与设备关联关系">
+		<content>
+		 update t_camera_deploy set camera_id=':cameraId', preset_id=':presetId', device_type=':deviceType' where device_id=':deviceId'   
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-getAllCameraDeploy" name="获取所有的摄像机与设备关联关系">
+		<content>
+		 select a.device_id, b.id as camera_id, b.camera_num, b.ip as camera_ip, b.web_port, b.device_port, b.recorder_ip, b.recorder_port,b.camera_user_name, b.camera_password, 
+         c.preset_num, d.model, 
+         case when a.device_type = 'P' then (select nfc_number from t_processor t0 where t0.id = a.device_id )
+         when a.device_type = 'D' then (select nfc_number from t_detector t2 where t2.id = a.device_id )
+			else '' end as nfc_number 
+         from t_camera_deploy a 
+         left join t_camera b on a.camera_id = b.id 
+         left join t_camera_preset c on a.preset_id = c.id 
+         left join t_camera_class d on b.class_id = d.id 
+         ORDER BY a.device_type 
+		</content>
+		<description></description>
+	</sql>
+	
+	<sql id="alarm-camera-getAlarmsCamera" name="获取报警信息及摄像头">
+		<content>
+		select aa.id, aa.device_type, aa.nfc_number, aa.alarm_date, aa.status, aa.alarm_desc, aa.is_valid, aa.danger_level,
+        bb.camera_num, bb.ip, bb.web_port, bb.device_port, bb.recorder_ip, bb.recorder_port, bb.camera_user_name, bb.camera_password, bb.recorder_user_name, bb.recorder_password ,bb.model,bb.pos_desc,bb.preset_num,bb.channel_id  
+		 from  t_alarm_info aa 
+		 LEFT JOIN (  select a.device_id, b.id as camera_id, b.camera_num, b.ip, b.web_port, b.device_port, b.recorder_ip, b.recorder_port, b.camera_user_name, b.camera_password, b.recorder_user_name, b.recorder_password,b.pos_desc,b.channel_id,
+           c.preset_num, d.model, 
+           case when a.device_type = 'P' then (select nfc_number from t_processor t0 where t0.id = a.device_id )
+           when a.device_type = 'D' then (select nfc_number from t_detector t2 where t2.id = a.device_id )
+			   else '' end as nfc_number
+           from t_camera_deploy a
+           left join t_camera b on a.camera_id = b.id 
+					 left join t_camera_class d on b.class_id = d.id 
+           left join t_camera_preset c on a.preset_id = c.id 
+         ) bb on aa.nfc_number = bb.nfc_number 
+		 where aa.status in('N','I') order by alarm_date asc   
+		</content>
+		<description></description>
+	</sql>
+	
+</sqls>

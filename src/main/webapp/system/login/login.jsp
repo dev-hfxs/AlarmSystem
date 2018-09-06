@@ -17,29 +17,33 @@
 <script type="text/javascript" src="<%=path%>/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="<%=path%>/js/easyui/locale/easyui-lang-zh_CN.js"></script>
 <style>
-/*
 body{
-	background-image:url("<%=path%>/style/default/image/login-bg.jpg");
+	background-image:url("<%=path%>/style/default/image/changcheng.jpg");
 	background-repeat:no-repeat;
-	background-position:200px 120px;
 }
-*/
 .msg-content{ position:relative; top:10px; width:100%; color:red; text-align:left; font-size:14px;}
 
 .panel-title{font-size:14px}
 
 .textbox-label{font-size:14px}
+.textbox-label{
+	width:80px;
+}
+.clear{ clear:both;}
 </style>
 </head>
 <body>
-<div style="width:400px;height:360px;margin-left:auto;margin-right:auto;margin-top:200px;">
-	<div class="easyui-panel" title=" 用 户 登 录" style="width:400px;max-width:400px;padding:30px 60px;">
-		<form id="ff" class="easyui-form" method="post">
+<div style="width:400px;height:360px;margin-left:auto;margin-right:auto;margin-top:180px;filter:alpha(Opacity=5);-moz-opacity:0.5;opacity: 0.5;">
+	<div class="easyui-panel" style="width:400px;height:260px;max-width:400px;padding:15px 15px;border-radius: 15px 15px 15px 15px;">
+		<form id="ff" class="easyui-form" method="post">		
 			<div style="margin-bottom:20px">
-				<input class="easyui-textbox" id="userName" name="userName" style="width:100%;height:28px;" data-options="label:'用户名:',required:true,validType:['email','length[10,50]']">
+				<img src="<%=path%>/style/default/image/logo48.png" height="36px" width="36px" style="position:relative;float:left;"/> <div style="float:left;position:relative;top:8px;left:10px;font-size:16px;color:blue;">周 界 报 警 系 统 登 录</div><div class="clear"></div>
 			</div>
-			<div style="margin-bottom:20px">
-				<input class="easyui-passwordbox" id="password" name="password" prompt="Password" iconWidth="28" style="width:100%;height:28px;" data-options="label:'密 码:',showEye:false,required:true,validType:'length[8,20]'">
+			<div style="margin-bottom:20px;margin-left:30px;">
+				<input class="easyui-textbox" id="userName" name="userName" style="width:80%;height:28px;" data-options="label:'用户名:',required:true,validType:['email','length[10,50]']">
+			</div>
+			<div style="margin-bottom:20px;margin-left:30px;">
+				<input class="easyui-passwordbox" id="password" name="password" prompt="Password" iconWidth="28" style="width:80%;height:28px;" data-options="label:'密 码:',showEye:false,required:true,validType:'length[8,20]'">
 			</div>
 		</form>
 		<div style="text-align:center;padding:5px 0">

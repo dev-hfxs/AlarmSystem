@@ -9,7 +9,10 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import com.sierotech.alarmsys.common.utils.BaseDataInitializor;
+import com.sierotech.alarmsys.common.utils.ProcessorMonitorInitializor;
 import com.sierotech.alarmsys.common.utils.SQLPoolInitializor;
+import com.sierotech.alarmsys.context.ProcessContext;
+import com.sierotech.alarmsys.monitor.AlarmMessageHandlerTask;
 
 @Component
 public class ContextLoadFinishHandle implements 
@@ -22,12 +25,25 @@ ApplicationListener<ContextRefreshedEvent>{
 	@Autowired
 	private BaseDataInitializor baseDataInit;
 	
+	@Autowired
+	private ProcessorMonitorInitializor pMonitorInit;
+	
 	@Override 
 	public void onApplicationEvent(ContextRefreshedEvent event) { 
 		if(event.getApplicationContext().getDisplayName().startsWith("Root WebApplicationContext")){
-			sqlPoolInit.run();
+			ProcessContext.initRedis();
 			
+			sqlPoolInit.run();
 			baseDataInit.run();
+			// 与维护的处理器建立连接,监听处理器状态
+			
+			pMonitorInit.run();
+			
+			//启动报警消息处理线程
+			AlarmMessageHandlerTask alarmMsgTask = new AlarmMessageHandlerTask();
+			Thread t = new Thread(alarmMsgTask);
+			t.setName("报警消息处理");
+			t.start();
 		}
 	}
 }

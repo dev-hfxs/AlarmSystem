@@ -29,8 +29,6 @@ public class BoxMgrControl{
 	@Autowired
 	private IBoxService boxService;
 	
-	
-	
 	@RequestMapping(value = "/add")
 	@ResponseBody
 	public Map<String, String> addBox(HttpServletRequest request) {	

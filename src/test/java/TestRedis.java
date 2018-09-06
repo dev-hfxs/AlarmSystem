@@ -1,4 +1,8 @@
+import java.util.HashMap;
+import java.util.Map;
+
 import com.sierotech.alarmsys.common.utils.JedisUtil;
+import com.sierotech.alarmsys.common.utils.JsonUtil;
 
 import redis.clients.jedis.Jedis;
 
@@ -20,17 +24,36 @@ import redis.clients.jedis.Jedis;
 public class TestRedis {
 	 public static void main(String[] args) {
 		 
-		 JedisUtil.poolInit("192.168.1.117", 6379);
+		 JedisUtil.poolInit("localhost", 6379);
 		 
-		 for(int i=0; i< 100; i++) {
+		 
 			 Jedis jedis = JedisUtil.getJedis();
 			 if(jedis == null) {
 				 System.out.println("不能连接redis");
 			 }
-//			 String uName = jedis.get("userName");
-//			 System.out.println("i:"+i + " ; v:" +uName);
-//			 JedisUtil.releaseJedis(jedis);
-		 }
+//			 System.out.println(jedis.get("userName"));
+			 Map<String,String> data2 = new HashMap<String,String>();
+			 data2.put("a", "阿里");
+			 data2.put("b", "北斗");
+			 
+			 String msg = JsonUtil.mapToJson(data2);
+//			 jedis.hmset("alarmList", data2);
+//			 jedis.hmget("alarmList");
+			 
+			 jedis.lpush("alarmList", msg);
+			 jedis.lpush("alarmList", msg);
+			 
+			 
+			 System.out.println(jedis.llen("alarmList"));
+			 String data = jedis.lpop("alarmList");
+			 
+			 System.out.println(data);
+			 
+			 System.out.println(jedis.llen("alarmList"));
+			 
+			 
+			 JedisUtil.releaseJedis(jedis);
+		 
 	        //连接本地的 Redis 服务
 //	        Jedis jedis = new Jedis("127.0.0.1");
 //		 Jedis jedis = new Jedis("192.168.1.116");

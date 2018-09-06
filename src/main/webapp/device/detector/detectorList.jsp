@@ -123,7 +123,7 @@ function showButtons(val,row){
 	//columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveDown(\''+val+'\')" style="width:80px;">下 移</a></span>&nbsp;&nbsp;';
 	//columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveTop(\''+val+'\')" style="width:80px;">置 前</a></span>&nbsp;&nbsp;';
 	//columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveLast(\''+val+'\')" style="width:80px;">置 后</a></span>&nbsp;&nbsp;';
-	
+	columnItem =  columnItem + '<span><a href="javascript:void(0)" class="easyui-linkbutton" onclick="bindCamera(\''+val+'\')" style="width:80px;">关联摄像机</a></span>&nbsp;&nbsp;';
 	return columnItem;
 }
 
@@ -219,6 +219,36 @@ function doDelete(val){
 			});
 		}
 	});
+}
+
+function bindCamera(deviceId){
+	var curUrl = "<%=path%>/device/camera/bindDevice.jsp?deviceType=D&deviceId="+deviceId;
+	var content = '<iframe name="popContent" id="popContent" src="' + curUrl + '" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+	var boarddiv = '<div id="msgwindow" title="关联摄像机" style="overflow:hidden;" ></div>'// style="overflow:hidden;"可以去掉滚动条
+	$(document.body).append(boarddiv);
+	var win = $('#msgwindow').dialog({
+		content : content,
+		width : '480',
+		height : '300',
+		modal : true,
+		title : '关联摄像机',
+		buttons: [{
+			text:'&nbsp;&nbsp;&nbsp;&nbsp;确定&nbsp;&nbsp;&nbsp;&nbsp;',
+			handler:function(){
+				$("#popContent")[0].contentWindow.okResponse();
+			}
+		},{
+			text:'&nbsp;&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;&nbsp;',
+			handler:function(){
+				$('#msgwindow').dialog('destroy');
+			}
+		}],
+		onClose : function() {
+			$(this).dialog('destroy');// 后面可以关闭后的事件
+		}
+	});
+	win.dialog('open');
+	win.window('center');
 }
 
 function doSearch(){
